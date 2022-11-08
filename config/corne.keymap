@@ -8,11 +8,45 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 
+#define LOWER 1
+#define RAISE 2
+#define ADJUST 3
+#define LOCK 4
+
+#define BACK C_AC_BACK
+#define FWD C_AC_FORWARD
+#define PAUSE PAUSE_BREAK
+#define VOL_DN C_VOL_DN
+#define VOL_UP C_VOL_UP
+
+#define LC_SPC LC(SPACE)
+#define ZM_IN LC(EQUAL)
+#define ZM_OUT LC(MINUS)
+#define ZM_RST LC(N0)
+
+#define BT0 BT_SEL 0
+#define BT1 BT_SEL 1
+#define BT2 BT_SEL 2
+#define BT3 BT_SEL 3
+#define BT4 BT_SEL 4
+
+
+#define HYP LS(LC(LA(LGUI)))
+#define HYPER(key) LS(LC(LA(LG(key))))
+
 &mt {
     retro-tap;
 };
 
 / {
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+
+        tri_layer {
+            if-layers = <LOWER RAISE>;
+            then-layer = <ADJUST>;
+        };
+    };
     behaviors {        
         hm: homerow_mods {
         compatible = "zmk,behavior-hold-tap";
@@ -24,9 +58,25 @@
         bindings = <&kp>, <&kp>;
         };
     };
+    
+combos {
+    compatible = "zmk,combos";
 
+    combo_caps {
+      timeout-ms = <1000>;
+      key-positions = <24 35>;
+      bindings = <&caps_word>;
+    };
+  };
         keymap {
                 compatible = "zmk,keymap";
+ // key positions
+    /* --------------------------------------------------------------------------------
+    *  |  0  |  1  |  2  |  3  |  4  |  5  |     |  6  |  7  |  8  |  9  |  10 |  11 |
+    *  |  12 |  13 |  14 |  15 |  16 |  17 |     |  18 |  19 |  20 |  21 |  22 |  23 |
+    *  |  24 |  25 |  26 |  27 |  28 |  29 |     |  30 |  31 |  32 |  33 |  34 |  35 |
+    *                    |  36 |  37 |  38 |     |  39 |  40 |  41 |
+    */
 
                 default_layer {
 // -----------------------------------------------------------------------------------------
@@ -37,7 +87,7 @@
                         bindings = <
    &kp TAB       &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp FSLH &kp BSPC
    &mt LCTRL ESC &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp P &kp SQT
-   &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp SEMI &caps_word
+   &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp SEMI &kp RSHFT
                       &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT
                         >;
                 };
@@ -68,5 +118,28 @@
                     	     &kp LGUI &trans   &kp SPACE   &kp RET   &trans    &kp RALT
                         >;
                 };
+         adjust_layer {
+            bindings = <
+                &trans     &trans     &kp C_PP   &kp VOL_UP &kp C_STOP &trans                           &bt BT_CLR &reset     &trans     &trans     &trans     &trans
+                &trans     &trans     &kp C_PREV &kp VOL_DN &kp C_NEXT &trans                           &bt BT0    &bt BT1    &bt BT2    &bt BT3    &bt BT4    &trans
+                &trans     &trans     &trans     &kp C_MUTE &trans     &trans                           &tog LOCK  &trans     &trans     &trans     &trans     &trans
+                                                            &trans     &trans     &trans     &kp RET    &trans     &trans
+            >;
         };
+        // The Lower+Raise+Backspace binding toggles a "soft lock" mode that effective disables
+        // other keys, allowing the keyboard to be transported without spurious key presses. (Note
+        // that the Lower, Raise, and Backspace positions must be bound to &trans to allow the lock
+        // layer to be toggled again after it's activated.)
+        //
+        // If https://github.com/zmkfirmware/zmk/issues/405 is implemented, this layer can be
+        // replaced by a native behavior in the future.
+        lock_layer {
+            bindings = <
+   &none      &none      &none      &none      &none      &none                            &none      &none      &none      &none      &none      &trans
+   &none      &none      &none      &none      &none      &none                            &none      &none      &none      &none      &none      &none
+   &none      &none      &none      &none      &none      &none                            &trans     &none      &none      &none      &none      &none
+                                               &none      &trans     &none      &none      &trans     &none
+            >;
+        };
+    };
 };
