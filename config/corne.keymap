@@ -135,7 +135,7 @@ combos {
         // replaced by a native behavior in the future.
         lock_layer {
             bindings = <
-   &none      &none      &none      &none      &none      &none                            &none      &none      &none      &none      &none      &trans
+   &none      &none      &none      &none      &none      &none                            &none      &none      &none      &none      &none      &none
    &none      &none      &none      &none      &none      &none                            &none      &none      &none      &none      &none      &none
    &none      &none      &none      &none      &none      &none                            &trans     &none      &none      &none      &none      &none
                                                &none      &trans     &none      &none      &trans     &none
