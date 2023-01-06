@@ -37,7 +37,7 @@
 &mt {
     retro-tap;
 };
-
+  
 / {
     conditional_layers {
         compatible = "zmk,conditional-layers";
@@ -67,6 +67,17 @@ combos {
       key-positions = <24 35>;
       bindings = <&caps_word>;
     };
+  };
+  
+  macros {
+      none_blk: none_blk {
+            label = "NON_BLOCKING";
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_tap &kp LS(COMMA) &kp EQUAL>
+                ;
+        };
   };
 
   keymap {
@@ -106,7 +117,7 @@ combos {
       >;
     };
 
-                raise_layer {
+    raise_layer {
 // -----------------------------------------------------------------------------------------
 // |  TAB       |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
 // | CTRL / ESC |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
@@ -114,11 +125,11 @@ combos {
 //                          | GUI |     | SPC |   | ENT |     | ALT |
                         bindings = <
    &kp  TAB  &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp KP_MULTIPLY &kp LPAR &kp RPAR &kp DEL
-   &mt LCTRL ESC &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
+   &mt LCTRL ESC &trans   &trans &trans   &trans   &none_blk      &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
    &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
                     	     &kp LGUI &trans   &kp SPACE   &kp RET   &trans    &kp RALT
                         >;
-                };
+        };
          adjust_layer {
             bindings = <
                 &trans     &bt BT_CLR &reset     &trans     &reset     &bootloader                      &bootloader &reset     &trans     &trans     &trans     &trans
